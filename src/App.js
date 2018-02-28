@@ -63,6 +63,8 @@ class App extends Component {
           title="Clear"
           onPress={this.props.counterClear}
         />
+
+        <Text>{this.props.hello.text}</Text>
       </View>
     );
   }
@@ -96,7 +98,8 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
   return {
-    counter: state
+    counter: state.counter,
+    hello: state.hello
   }
 }
 
