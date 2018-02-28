@@ -7,43 +7,28 @@ import {
   Button,
 } from 'react-native';
 
-export default class App extends Component {
+import { connect } from 'react-redux';
+
+import {
+  counterIncrement,
+  counterDecrement,
+  counterClear,
+  counterInput
+} from './actions';
+
+class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      counter: '0'
-    };
-
-    this.initCounter = this.initCounter.bind(this);
-    this.increaseCounter = this.increaseCounter.bind(this);
-    this.decreaseCounter = this.decreaseCounter.bind(this);
     this.onChangeText = this.onChangeText.bind(this);
   }
 
-  initCounter(sign) {
-    this.setState({
-      counter: '0'
-    })
-  }
-
-  increaseCounter(sign) {
-    this.setState({
-      counter: '' + (parseInt(this.state.counter) + 1)
-    })
-  }
-
-  decreaseCounter(sign) {
-    this.setState({
-      counter: '' + (parseInt(this.state.counter) - 1)
-    })
-  }
-
   onChangeText(number) {
-    const counter = number;
-    this.setState({counter});
+    this.props.counterInput(number);
   }
 
   render() {
+    console.log('log from react native');
+    console.log(this.props);
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>
@@ -53,26 +38,30 @@ export default class App extends Component {
         <Button
           style={styles.button}
           title="-"
-          onPress={this.decreaseCounter}
+          onPress={this.props.counterDecrement}
         />
 
         <TextInput
           style={styles.input}
           placeholder="0"
           onChangeText={this.onChangeText}
-          value={this.state.counter}
+          value={this.props.counter.toString()}
         />
 
         <Button
           style={styles.button}
           title="+"
-          onPress={this.increaseCounter}
+          onPress={this.props.counterIncrement}
         />
+
+        <Text>
+          Last count number: {this.props.counter}
+        </Text>
         
         <Button
           style={styles.button}
           title="Clear"
-          onPress={this.initCounter}
+          onPress={this.props.counterClear}
         />
       </View>
     );
@@ -97,10 +86,25 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     paddingRight: 15,
     textAlign: 'center',
-    width: 50,
+    width: 60,
   },
   button: {
     padding: 5,
     backgroundColor: '#f2f2f2',
   },
 });
+
+function mapStateToProps(state) {
+  return {
+    counter: state
+  }
+}
+
+const counterActions = {
+  counterIncrement,
+  counterDecrement,
+  counterClear,
+  counterInput
+};
+
+export default connect(mapStateToProps, counterActions)(App);
